@@ -3,7 +3,6 @@ import baseConfig from './baseConfig'
 import ding from '@/lib/ding'
 import whole from '@/lib/whole'
 
-// let dd = window.dd
 axios.defaults.timeout = 30000;
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';

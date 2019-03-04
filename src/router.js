@@ -26,7 +26,6 @@ const scrollBehavior = (to, from, savedPosition) => {
 }
 
 const router = new Router({
-  // base: '/rctb/',
   mode: 'history',
   scrollBehavior,
   routes: [
@@ -75,13 +74,10 @@ let setDocumentTitle = function (title) {
 };
 
 let setDDConfig = function (to) {
-  // let path = store.state.ddstate.ddConfigPath || base.baseURL
   // let path = location.href
   // ding.jsApiOAuth(path).then((ddconfig) => {
   //   dd.config(ddconfig)
   // }).catch(function (error) {
-  //   // TODO 错误信息提示
-  //   // ding.alertInfo(DEM.ddConfigInfoError);
   // });
 }
 
