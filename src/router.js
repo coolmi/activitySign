@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import ding from '@/lib/ding'
-// import store from '@/store'
-// import base from '@/api/baseConfig'
 
 Vue.use(Router);
 
@@ -38,7 +36,7 @@ const router = new Router({
     },
     {
       path: '/',
-      component: () => import('@/views/Appraise'),
+      component: () => import('@/views/apply'),
       meta: {
         ddConfig: true
       }
@@ -74,11 +72,11 @@ let setDocumentTitle = function (title) {
 };
 
 let setDDConfig = function (to) {
-  // let path = location.href
-  // ding.jsApiOAuth(path).then((ddconfig) => {
-  //   dd.config(ddconfig)
-  // }).catch(function (error) {
-  // });
+  let path = location.href
+  ding.jsApiOAuth(path).then((ddconfig) => {
+    dd.config(ddconfig)
+  }).catch(function (error) {
+  });
 }
 
 export default router;

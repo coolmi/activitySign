@@ -58,24 +58,23 @@ export function getPhoneInfo() {
   });
 }
 
-export function ddLogin(path) {
+export function getItcode() {
   return new Promise((resolve, reject) => {
-    if (path === undefined || path === '') {
-      reject(new FlowError('钉钉授权验证失败'))
-      return
-    }
-    getRequestAuthCode(path).then(data => {
-      api.getLogin(data, function (res) {
-        alert(JSON.stringify(res))
-        if (res.data.code) {
-          resolve(true)
-        } else {
-          reject(new FlowError('钉钉免登失败'))
+    dd.ready(function () {
+      dd.runtime.permission.requestAuthCode({
+        corpId: CORPID,
+        onSuccess: function (result) {
+          api.getItcodeInfo(result.code, function (res) {
+            store.dispatch('updateCode', res.data.data)
+            resolve(res.data)
+          })
+        },
+        onFail: function (err) {
+          store.dispatch('updateCode', false)
+          reject(new FlowError('获取免登陆码失败'))
         }
       })
-    }).catch((err) => {
-      reject(err)
-    })
+    });
   });
 }
 
@@ -92,8 +91,6 @@ export function getRequestAuthCode(path) {
           onFail: function (err) {
             store.dispatch('updateCode', false)
             reject(new FlowError('获取免登陆码失败'))
-            // window.alert('dd ding error: ' + window.location.href + JSON.stringify(err));
-            // whole.showTop(dingEM.ddRequestAuthCodeError)
           }
         })
       })
@@ -189,6 +186,41 @@ export function showToast(mes = '成功', icon = 'success') {
 export function hidePreloader() {
   dd.device.notification.hidePreloader()
 }
+export function alertInfo(mes, title = '提示', btnName = '确定') {
+  dd.ready(function () {
+    dd.device.notification.alert({
+      message: mes,
+      title: title,
+      buttonName: btnName,
+      onSuccess: function () {
+      },
+      onFail: function (err) {
+      }
+    });
+  });
+}
+export function setItem(key, value) {
+  dd.ready(function () {
+    dd.util.domainStorage.setItem({
+      name: key, // 存储信息的key值
+      value: value, // 存储信息的Value值
+      onSuccess: function (info) {
+      },
+      onFail: function (err) {
+      }
+    });
+  })
+}
+
+export function getItem(key) {
+  dd.util.domainStorage.getItem({
+    name: key, // 存储信息的key值
+    onSuccess: function(info) {
+    },
+    onFail: function(err) {
+    }
+  });
+}
 
 export default {
   CORPID,
@@ -210,13 +242,16 @@ export default {
   getPhoneInfo,
   getLocation,
   parseParam,
-  ddLogin,
   getRequestAuthCode,
   jsApiOAuth,
   setRight,
   confirm,
+  alertInfo,
   showPreloader,
   hidePreloader,
   showToast,
-  getJSApiList
+  getJSApiList,
+  setItem,
+  getItem,
+  getItcode
 }

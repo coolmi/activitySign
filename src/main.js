@@ -18,6 +18,10 @@ import Cell from 'vux/src/components/cell/index.vue'
 import Box from 'vux/src/components/box/index.vue'
 import Rater from 'vux/src/components/rater/index.vue'
 import Toast from 'vux/src/components/toast/index.vue'
+import Group from 'vux/src/components/group/index.vue'
+import Datetime from 'vux/src/components/datetime/index.vue'
+import Flexbox from 'vux/src/components/flexbox/flexbox.vue'
+import FlexboxItem from 'vux/src/components/flexbox/flexbox-item.vue'
 
 Vue.config.productionTip = false
 Vue.component('button-tab', ButtonTab);
@@ -34,13 +38,15 @@ Vue.component('x-button', XButton);
 Vue.component('x-input', XInput);
 Vue.component('Box', Box);
 Vue.component('toast', Toast);
+Vue.component('group', Group);
+Vue.component('datetime', Datetime);
+Vue.component('flexbox', Flexbox);
+Vue.component('flexbox-item', FlexboxItem);
 
 store.dispatch('saveURL', location.href)
 store.dispatch('saveDingTalkCode')
-  // initVue();
-ding.ddLogin(location.href).then(data => {
-  // console.log(data);
-  // alert(1)
+// initVue();
+ding.getItcode().then(data => {
   initVue()
 }).catch((err) => {
   let dd = window.dd
