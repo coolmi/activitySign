@@ -22,6 +22,7 @@ import Group from 'vux/src/components/group/index.vue'
 import Datetime from 'vux/src/components/datetime/index.vue'
 import Flexbox from 'vux/src/components/flexbox/flexbox.vue'
 import FlexboxItem from 'vux/src/components/flexbox/flexbox-item.vue'
+import Selector from 'vux/src/components/selector/index.vue'
 
 Vue.config.productionTip = false
 Vue.component('button-tab', ButtonTab);
@@ -42,6 +43,7 @@ Vue.component('group', Group);
 Vue.component('datetime', Datetime);
 Vue.component('flexbox', Flexbox);
 Vue.component('flexbox-item', FlexboxItem);
+Vue.component('selector', Selector);
 
 store.dispatch('saveURL', location.href)
 store.dispatch('saveDingTalkCode')
