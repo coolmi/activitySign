@@ -44,8 +44,6 @@
       <div class="checktitle" style="border-top: 1px solid rgb(240, 240, 240)">未签到<span style="margin-left: 6px">{{unsignuserlist.length}}</span></div>
       <div>
         <div class="checkspan" v-for="(per, index) in unsignuserlist" :key="index">{{per.name}}</div>
-        <!--<div class="checkspan">...</div>-->
-        <!--<div v-if="checkhide" class="checkspan" @click="perhide">收起</div>-->
       </div>
       <br>
       <br>
@@ -57,7 +55,6 @@
           </button-tab-item>
         </button-tab>
       </div>
-      <!--未评价-->
       <div v-if="selectedIndex === 0 && unfinishList.length > 0">
         <swipeout>
           <swipeout-item :threshold=".5" transition-mode="follow" v-for="item in unfinishList" :key="item.id" class="bor_">
@@ -78,7 +75,6 @@
           </swipeout-item>
         </swipeout>
       </div>
-      <!--已评价-->
       <div v-if="selectedIndex === 1 && finishList.length > 0">
         <swipeout>
           <swipeout-item :threshold=".5" transition-mode="follow" v-for="item in finishList" :key="item.id" class="bor_">
