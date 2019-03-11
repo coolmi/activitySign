@@ -22,16 +22,17 @@
         <!--</flexbox>-->
       <!--</group>-->
       <group gutter="8px">
-        <div class="cytitle">参与人员<span style="margin-left:8px;font-size: 12px; color: #B2B2B2">点击头像即可删除添加的人员</span></div>
-        <!--<div class="cyspan" v-for="per in personArr" :key="per.value">{{per.label | getName}}</div>-->
-        <div v-if="userlist.length > 10">
-          <div class="cyspan" v-for="(per, index) in userlist10" :key="index" @click="delPerson(per)">{{per.name | getName}}</div>
-          <div class="cyspan">...</div>
+        <div class="checktitle">参与人员<span style="margin-left:8px;font-size: 12px; color: #B2B2B2">点击头像即可删除添加的人员</span></div>
+        <!--<div class="checkspan" v-for="per in personArr" :key="per.value">{{per.label | getName}}</div>-->
+        <div v-if="checkevent">
+          <div class="checkspan" v-for="(per, index) in userlist10" :key="index" @click="delPerson(per)">{{per.name | getName}}</div>
+          <div class="checkspanmore" @click="permore">...</div>
         </div>
-        <div v-else>
-          <div class="cyspan" v-for="(per, index) in userlist" :key="index" @click="delPerson(per)">{{per.name | getName}}</div>
+        <div v-if="!checkevent">
+          <div class="checkspan" v-for="(per, index) in userlist" :key="index" @click="delPerson(per)">{{per.name | getName}}</div>
         </div>
-        <div class="cyspan" @click="checkPerson">+</div>
+        <div v-if="checkhide" class="checkspanmore" @click="perhide">收起</div>
+        <div class="checkspanmore" @click="checkPerson">+</div>
       </group>
       <group gutter="0" label-width="5.5em" label-margin-right="30px">
         <datetime v-model="infos.starttm"
@@ -54,10 +55,10 @@
                  text-align="right">
         </x-input>
         <x-textarea :max="50"
-                    title="描述"
-                    rows="2"
+                    title="内容"
+                    :rows="3"
                     v-model="infos.description"
-                    placeholder="请添加详情描述">
+                    placeholder="请添加详情内容">
         </x-textarea>
       </group>
       <box gap="40px 30px">
@@ -80,13 +81,31 @@
           address: '',
           description: ''
         },
+        checkevent: false,
+        checkhide: false,
         userlist10: [],
         userlist: [],
+        pickUsers: [],
         showtoastinfo: false,
         toastmsg: '',
         planList: [{ key: '1', value: '提前5分钟' }, { key: '2', value: '提前15分钟' }, { key: '3', value: '提前25分钟' }],
         openDate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ' + new Date().getHours() + ':' + new Date().getMinutes(),
         closeDate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ' + new Date().getHours() + ':' + new Date().getMinutes()
+      }
+    },
+    watch: {
+      userlist () {
+        let _that = this;
+        if (_that.userlist.length > 10) {
+          _that.checkevent = true;
+          _that.checkhide = false;
+          _that.userlist10 = _that.userlist.slice(0, 10)
+          return _that.userlist10;
+        } else {
+          _that.checkevent = false;
+          _that.checkhide = false;
+          return _that.userlist;
+        }
       }
     },
     filters: {
@@ -116,16 +135,23 @@
             multiple: true,
             limitTips: '超出人员限制',
             maxUsers: 1000,
-            pickedUsers: _that.userlist,
+            pickedUsers: _that.pickUsers,
             appId: 223447773,
             permissionType: 'GLOBAL',
             responseUserOnly: true,
             startWithDepartmentId: 0,
             onSuccess: function (result) {
-              if (result.users.length > 10) {
-                _that.userlist10 = result.users.slice(0, 10);
-                _that.userlist = result.users;
-              }
+              result.users.forEach(function (item) {
+                _that.pickUsers.push(item.emplId)
+              })
+              // if (result.users.length > 10) {
+              //   _that.userlist10 = result.users.slice(0, 10);
+              //   _that.userlist = result.users;
+              //   _that.checkevent = true;
+              // } else {
+              //   _that.userlist = result.users;
+              //   _that.checkevent = false;
+              // }
               _that.userlist = result.users;
             },
             onFail: function (err) {
@@ -143,12 +169,30 @@
        * @param per
        */
       delPerson(per) {
-        this.userlist = this.userlist.filter(function (item) {
-           return item !== per;
+        let _that = this;
+        _that.userlist = _that.userlist.filter(function (item) {
+          return item !== per;
+        })
+        _that.pickUsers = _that.pickUsers.filter(function (itemter) {
+          return itemter !== per.emplId;
         })
       },
+      /**
+       * 点击更多
+       */
+      permore() {
+        this.checkevent = false;
+        this.checkhide = true;
+      },
+      /**
+       * 收起
+       */
+      perhide () {
+        this.checkevent = true;
+        this.checkhide = false;
+      },
       subInfo () {
-        this.showtoastinfo = true
+        this.showtoastinfo = true;
         this.toastmsg = '提交成功!'
       }
     }
@@ -211,21 +255,33 @@
     border-radius: 3px;
     border: 1px solid #E5E5E5;
   }
-  .cytitle {
+  .checktitle {
     padding: 10px 15px 5px 15px;
     font-size: 16px;
   }
-  .cyspan {
+  .checkspan {
     float: left;
     margin: 10px 10px 10px 15px;
     width: 30px;
     height: 30px;
-    line-height: 30px;
-    border: 1px solid rgb(47, 111, 253);
+    line-height: 28px;
+    background-color: rgb(47, 111, 253);
     border-radius: 50%;
     font-size: .8rem;
     text-align: center;
-    color: #000000;
+    color: rgb(255, 255, 255);
+  }
+  .checkspanmore {
+    float: left;
+    margin: 10px 10px 10px 15px;
+    width: 30px;
+    height: 30px;
+    line-height: 28px;
+    background-color: rgb(253, 180, 37);
+    border-radius: 50%;
+    font-size: .8rem;
+    text-align: center;
+    color: rgb(255, 255, 255);
   }
   .errors-tip {
     font-size: 1em;

@@ -28,8 +28,15 @@ const router = new Router({
   scrollBehavior,
   routes: [
     {
-      path: '/',
+      path: '/e',
       component: () => import('@/views/home'),
+      meta: {
+        ddConfig: true
+      }
+    },
+    {
+      path: '/',
+      component: () => import('@/views/prodetail'),
       meta: {
         ddConfig: true
       }
