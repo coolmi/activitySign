@@ -85,7 +85,7 @@
                 {{item.name}}
               </div>
               <div class="content_div">
-                <span>{{item.name + '提出来' + item.event + ',评价完成!'}}</span>
+                <span>{{item.name + '提出来' + item.event + ',评价!'}}</span>
                 <span>{{item.time}}</span>
               </div>
             </div>
